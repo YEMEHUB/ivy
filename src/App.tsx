@@ -37,6 +37,15 @@ export enum ExplodingState {
   UnExploding,
   Done,
 }
+type CornerIndex = 0 | 1 | 2 | 3;
+
+// 각 코너별로 "push(밀기)가 clockwise(true)인지 counterclockwise(false)인지"
+const PUSH_DIR: Record<CornerIndex, boolean> = {
+  0: true,   // corner 0에서 push=clockwise
+  1: true,   // corner 1에서 push=clockwise
+  2: true,   // corner 2에서 push=clockwise
+  3: true,   // corner 3에서 push=clockwise
+};
 
 export class AppViewModel extends BaseViewModel {
   state = State.solved();
@@ -149,23 +158,30 @@ export class AppViewModel extends BaseViewModel {
     );
   }
 
-  handleCornerClick(
-    corner: 0 | 1 | 2 | 3,
-    _side: 0 | 1 | 2 | undefined,
-    rightClick: boolean,
-  ) {
-    if (this.mode === Mode.Solve) return;
+ handleCornerClick(
+  corner: CornerIndex,
+  _side: 0 | 1 | 2 | undefined,
+  rightClick: boolean,
+) {
+  if (this.mode === Mode.Solve) return;
 
-    const clockwise = rightClick;
+  // 쌤 규칙: 우클릭 = push(밀기, 바깥쪽), 좌클릭 = pull(당기기, 안쪽)
+  const isPush = rightClick;
 
-    if (this.mode === Mode.Play) {
-      this.state = this.state.rotate(corner, clockwise);
-    }
+  // 이 코너에서 push일 때 실제 회전 방향(clockwise?)을 가져옴
+  const pushIsClockwise = PUSH_DIR[corner];
 
-    if (this.mode === Mode.Edit) {
-      this.state = this.state.rotateCorner(corner, clockwise);
-    }
+  // push면 PUSH_DIR대로, pull이면 그 반대로
+  const clockwise = isPush ? pushIsClockwise : !pushIsClockwise;
+
+  if (this.mode === Mode.Play) {
+    this.state = this.state.rotate(corner, clockwise);
   }
+
+  if (this.mode === Mode.Edit) {
+    this.state = this.state.rotateCorner(corner, clockwise);
+  }
+}
 
   handleCenterClick(center: 0 | 1 | 2 | 3 | 4 | 5, _rightClick: boolean) {
     this.doNotTurnPls = true;
@@ -443,15 +459,20 @@ export const App = observer(() => {
           <directionalLight position={[0, 0, -5]} color="white" />
           <directionalLight position={[0, 5, 0]} color="white" />
           <directionalLight position={[0, -5, 0]} color="white" />
-          <CubeHandler
-            onCornerClick={(corner, side) => vm.handleCornerClick(corner, side, false)}
-            onCornerRightClick={(corner, side) =>
-              vm.handleCornerClick(corner, side, true)
-            }
-            onCenterClick={(center) => vm.handleCenterClick(center, false)}
-            onCenterRightClick={(center) => vm.handleCenterClick(center, true)}
-            state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
-          />
+         <CubeHandler
+  onCornerClick={(corner, side) => {
+    console.log('LEFT CLICK', corner, side);
+    vm.handleCornerClick(corner, side, false);
+  }}
+  onCornerRightClick={(corner, side) => {
+    console.log('RIGHT CLICK', corner, side);
+    vm.handleCornerClick(corner, side, true);
+  }}
+  onCenterClick={(center) => vm.handleCenterClick(center, false)}
+  onCenterRightClick={(center) => vm.handleCenterClick(center, true)}
+  state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
+/>
+
           <OrbitControls enablePan={false} target={[0, 0, 0]} />
         </Canvas>
       </div>
