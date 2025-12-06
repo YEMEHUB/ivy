@@ -24,6 +24,13 @@ import { action } from 'mobx';
 import { createContext, useContext, useState } from 'react';
 import { InfoDialog } from './components/dialogs/InfoDialog';
 
+const PUSH_DIR: Record<0 | 1 | 2 | 3, boolean> = {
+  0: true,
+  1: false, // 왼쪽 위 코너: 우클릭이 안쪽이었으니 반대로!
+  2: true,
+  3: true,  // 오른쪽 위 코너: 우클릭이 이미 바깥쪽이므로 그대로
+};
+
 const graph = genGraph();
 
 export enum Mode {
@@ -37,18 +44,6 @@ export enum ExplodingState {
   UnExploding,
   Done,
 }
-type CornerIndex = 0 | 1 | 2 | 3;
-
-// 각 코너별로 "push(밀기)가 clockwise(true)인지 counterclockwise(false)인지"
-type CornerIndex = 0 | 1 | 2 | 3;
-
-const PUSH_DIR: Record<CornerIndex, boolean> = {
-  0: true,
-  1: false, // 🔹 왼쪽 위 코너: push(우클릭)는 counterclockwise 쪽이 바깥
-  2: true,
-  3: true,  // 🔹 오른쪽 위 코너: push(우클릭)는 clockwise 쪽이 바깥
-};
-
 
 export class AppViewModel extends BaseViewModel {
   state = State.solved();
@@ -161,28 +156,28 @@ export class AppViewModel extends BaseViewModel {
     );
   }
 
-handleCornerClick(
-  corner: CornerIndex,
-  _side: 0 | 1 | 2 | undefined,
-  rightClick: boolean,
-) {
-  if (this.mode === Mode.Solve) return;
+  handleCornerClick(
+    corner: 0 | 1 | 2 | 3,
+    _side: 0 | 1 | 2 | undefined,
+    rightClick: boolean,
+  ) {
+    if (this.mode === Mode.Solve) return;
 
-  // 우클릭=push(바깥쪽), 좌클릭=pull(안쪽)
-  const isPush = rightClick;
+    // 우클릭 = push(바깥쪽), 좌클릭 = pull(안쪽)
+    const isPush = rightClick;
 
-  // 이 코너에서 push=clockwise?
-  const pushIsClockwise = PUSH_DIR[corner];
+    // 이 코너에서 push(우클릭)가 어느 방향인지
+    const pushIsClockwise = PUSH_DIR[corner];
 
-  // push는 지정된 방향, pull은 반대
-  const clockwise = isPush ? pushIsClockwise : !pushIsClockwise;
+    // push는 그 방향, pull은 반대 방향
+    const clockwise = isPush ? pushIsClockwise : !pushIsClockwise;
 
-  if (this.mode === Mode.Play) {
-    this.state = this.state.rotate(corner, clockwise);
-  } else if (this.mode === Mode.Edit) {
-    this.state = this.state.rotateCorner(corner, clockwise);
+    if (this.mode === Mode.Play) {
+      this.state = this.state.rotate(corner, clockwise);
+    } else if (this.mode === Mode.Edit) {
+      this.state = this.state.rotateCorner(corner, clockwise);
+    }
   }
-}
 
   handleCenterClick(center: 0 | 1 | 2 | 3 | 4 | 5, _rightClick: boolean) {
     this.doNotTurnPls = true;
