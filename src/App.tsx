@@ -305,6 +305,7 @@ export const App = observer(() => {
           ]}
           gap={5}
         >
+          // trigger pages deploy
           {vm.mode === Mode.Play && (
   <FlexRow
     gap={10}
