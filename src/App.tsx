@@ -156,7 +156,7 @@ export class AppViewModel extends BaseViewModel {
   ) {
     if (this.mode === Mode.Solve) return;
 
-    const clockwise = !rightClick;
+    const clockwise = rightClick;
 
     if (this.mode === Mode.Play) {
       this.state = this.state.rotate(corner, clockwise);
