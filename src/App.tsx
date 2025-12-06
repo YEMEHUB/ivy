@@ -380,7 +380,8 @@ export const App = observer(() => {
               >
                 {cubeColorKeys
                   .map((key) => ({ key, color: cubeColors[key] }))
-                  .map(({ key, }) => (
+                  .map(({ key, color }) => (
+
                     <Button
                       key={key}
                       minimal
@@ -388,10 +389,10 @@ export const App = observer(() => {
                         vm.doNotTurnPls = true;
 
                         setTimeout(
-                          action(() => (vm.doNotTurnPls = false)),
-                          1,
-                        );
-                        vm.editSelectedCenter= key;
+                       action(() => (vm.doNotTurnPls = false)),
+                       1,
+                       );
+                       vm.editSelectedCenterColor = key;
                       })}
                       css={[
                         {
@@ -403,10 +404,10 @@ export const App = observer(() => {
                             filter: 'brightness(1)',
                           },
                         },
-                        vm.editSelectedCenter=== key && {
-                          filter: 'brightness(1)',
-                          scale: '1.2',
-                          zIndex: 1,
+                        vm.editSelectedCenterColor === key && {
+                        filter: 'brightness(1)',
+                        scale: '1.2',
+                        zIndex: 1,
                         },
                       ]}
                     />
