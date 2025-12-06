@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { Canvas } from '@react-three/fiber';
 
-import { OrbitControls } from '@react-three/drei';
+import { TrackballControls } from '@react-three/drei';
 
 import { absolute, flexCenter, fullSize, padding } from './styles';
 import { State, StateDto } from './graph/types';
@@ -446,7 +446,7 @@ export const App = observer(() => {
             </FlexRow>
           )}
         </FlexColumn>
-  <Canvas
+ <Canvas
   camera={{
     position: [10, 10, 10],
   }}
@@ -471,13 +471,14 @@ export const App = observer(() => {
     state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
   />
 
-  <OrbitControls
-    enablePan={false}
-    target={[0, 0, 0]}
-    minPolarAngle={-Math.PI}
-    maxPolarAngle={2 * Math.PI}
+  <TrackballControls
+    noPan
+    staticMoving={false}
+    rotateSpeed={3}
+    zoomSpeed={1.2}
   />
 </Canvas>
+
 
       </div>
     </AppViewModelContext.Provider>
