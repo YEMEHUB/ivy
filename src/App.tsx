@@ -158,27 +158,25 @@ export class AppViewModel extends BaseViewModel {
     );
   }
 
- handleCornerClick(
+handleCornerClick(
   corner: CornerIndex,
   _side: 0 | 1 | 2 | undefined,
   rightClick: boolean,
 ) {
   if (this.mode === Mode.Solve) return;
 
-  // 쌤 규칙: 우클릭 = push(밀기, 바깥쪽), 좌클릭 = pull(당기기, 안쪽)
+  // 우클릭=push(바깥쪽), 좌클릭=pull(안쪽)
   const isPush = rightClick;
 
-  // 이 코너에서 push일 때 실제 회전 방향(clockwise?)을 가져옴
+  // 이 코너에서 push=clockwise?
   const pushIsClockwise = PUSH_DIR[corner];
 
-  // push면 PUSH_DIR대로, pull이면 그 반대로
+  // push는 지정된 방향, pull은 반대
   const clockwise = isPush ? pushIsClockwise : !pushIsClockwise;
 
   if (this.mode === Mode.Play) {
     this.state = this.state.rotate(corner, clockwise);
-  }
-
-  if (this.mode === Mode.Edit) {
+  } else if (this.mode === Mode.Edit) {
     this.state = this.state.rotateCorner(corner, clockwise);
   }
 }
