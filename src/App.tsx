@@ -380,7 +380,7 @@ export const App = observer(() => {
               >
                 {cubeColorKeys
                   .map((key) => ({ key, color: cubeColors[key] }))
-                  .map(({ key, color }) => (
+                  .map(({ key, }) => (
                     <Button
                       key={key}
                       minimal
@@ -391,7 +391,7 @@ export const App = observer(() => {
                           action(() => (vm.doNotTurnPls = false)),
                           1,
                         );
-                        vm.editSelectedCenterColor = key;
+                        vm.editSelectedCenter= key;
                       })}
                       css={[
                         {
@@ -403,7 +403,7 @@ export const App = observer(() => {
                             filter: 'brightness(1)',
                           },
                         },
-                        vm.editSelectedCenterColor === key && {
+                        vm.editSelectedCenter=== key && {
                           filter: 'brightness(1)',
                           scale: '1.2',
                           zIndex: 1,
@@ -445,32 +445,39 @@ export const App = observer(() => {
             </FlexRow>
           )}
         </FlexColumn>
-        <Canvas
-          camera={{
-            position: [10, 10, 10],
-          }}
-        >
-          <ambientLight />
-          <directionalLight position={[0, 0, 5]} color="white" />
-          <directionalLight position={[0, 0, -5]} color="white" />
-          <directionalLight position={[0, 5, 0]} color="white" />
-          <directionalLight position={[0, -5, 0]} color="white" />
-         <CubeHandler
-  onCornerClick={(corner, side) => {
-    console.log('LEFT CLICK', corner, side);
-    vm.handleCornerClick(corner, side, false);
+  <Canvas
+  camera={{
+    position: [10, 10, 10],
   }}
-  onCornerRightClick={(corner, side) => {
-    console.log('RIGHT CLICK', corner, side);
-    vm.handleCornerClick(corner, side, true);
-  }}
-  onCenterClick={(center) => vm.handleCenterClick(center, false)}
-  onCenterRightClick={(center) => vm.handleCenterClick(center, true)}
-  state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
-/>
+>
+  <ambientLight />
+  <directionalLight position={[0, 0, 5]} color="white" />
+  <directionalLight position={[0, 0, -5]} color="white" />
+  <directionalLight position={[0, 5, 0]} color="white" />
+  <directionalLight position={[0, -5, 0]} color="white" />
 
-          <OrbitControls enablePan={false} target={[0, 0, 0]} />
-        </Canvas>
+  <CubeHandler
+    onCornerClick={(corner, side) => {
+      console.log("LEFT CLICK", corner, side);
+      vm.handleCornerClick(corner, side, false);
+    }}
+    onCornerRightClick={(corner, side) => {
+      console.log("RIGHT CLICK", corner, side);
+      vm.handleCornerClick(corner, side, true);
+    }}
+    onCenterClick={(center) => vm.handleCenterClick(center, false)}
+    onCenterRightClick={(center) => vm.handleCenterClick(center, true)}
+    state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
+  />
+
+  <OrbitControls
+    enablePan={false}
+    target={[0, 0, 0]}
+    minPolarAngle={-Math.PI}
+    maxPolarAngle={2 * Math.PI}
+  />
+</Canvas>
+
       </div>
     </AppViewModelContext.Provider>
   );
