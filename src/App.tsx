@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { Canvas } from '@react-three/fiber';
 
-import { TrackballControls } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 
 import { absolute, flexCenter, fullSize, padding } from './styles';
 import { State, StateDto } from './graph/types';
@@ -48,6 +48,7 @@ export enum ExplodingState {
 export class AppViewModel extends BaseViewModel {
   state = State.solved();
   mode = Mode.Play;
+  view: 'front' | 'corner' = 'front';
 
   // this is possibly the sloppiest code I've ever written but this
   // was the easiest hack I could come up with to fix the stupid turning bug
@@ -300,6 +301,8 @@ export const App = observer(() => {
               icon={IconNames.InfoSign}
               onClick={() => setShowDialog((p) => !p)}
             />
+            <button onClick={() => (vm.view = 'front')}>정면 보기</button>
+<button onClick={() => (vm.view = 'corner')}>모서리 보기</button>
             <InfoDialog
               isOpen={showDialog}
               onClose={() => {
@@ -456,7 +459,13 @@ export const App = observer(() => {
   <directionalLight position={[0, 0, -5]} color="white" />
   <directionalLight position={[0, 5, 0]} color="white" />
   <directionalLight position={[0, -5, 0]} color="white" />
-
+<group
+  rotation={
+    vm.view === 'front'
+      ? [0, 0, 0]
+      : [-Math.PI / 4, Math.PI / 4, 0] // 대각선에서 코너가 보이는 각도 (숫자는 필요하면 조금씩 조절)
+  }
+>
   <CubeHandler
     onCornerClick={(corner, side) => {
       console.log("LEFT CLICK", corner, side);
@@ -470,13 +479,16 @@ export const App = observer(() => {
     onCenterRightClick={(center) => vm.handleCenterClick(center, true)}
     state={vm.mode === Mode.Solve ? vm.pathState : vm.state}
   />
+</group>
+  <OrbitControls
+  enablePan={false}
+  target={[0, 0, 0]}
+  minPolarAngle={0.3}               // 너무 위/아래는 막고
+  maxPolarAngle={Math.PI - 0.3}
+  minAzimuthAngle={-Math.PI / 2.2}  // 측면으로 너무 돌지 않게
+  maxAzimuthAngle={Math.PI / 2.2}
+/>
 
-  <TrackballControls
-    noPan
-    staticMoving={false}
-    rotateSpeed={3}
-    zoomSpeed={1.2}
-  />
 </Canvas>
 
 
