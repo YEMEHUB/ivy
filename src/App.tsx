@@ -161,7 +161,7 @@ export class AppViewModel extends BaseViewModel {
     _side: 0 | 1 | 2 | undefined,
     rightClick: boolean,
   ) {
-    if (this.mode === Mode.Solve) return;
+    // if (this.mode === Mode.Solve) return;
 
     // 우클릭 = push(바깥쪽), 좌클릭 = pull(안쪽)
     const isPush = rightClick;
