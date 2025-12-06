@@ -463,7 +463,7 @@ export const App = observer(() => {
   rotation={
     vm.view === 'front'
       ? [0, 0, 0]
-      : [-Math.PI / 4, Math.PI / 4, 0] // 대각선에서 코너가 보이는 각도 (숫자는 필요하면 조금씩 조절)
+      : [Math.PI / 4, Math.PI / 4, 0] // 대각선에서 코너가 보이는 각도 (숫자는 필요하면 조금씩 조절)
   }
 >
   <CubeHandler
@@ -485,8 +485,7 @@ export const App = observer(() => {
   target={[0, 0, 0]}
   minPolarAngle={0.3}               // 너무 위/아래는 막고
   maxPolarAngle={Math.PI - 0.3}
-  minAzimuthAngle={-Math.PI / 2.2}  // 측면으로 너무 돌지 않게
-  maxAzimuthAngle={Math.PI / 2.2}
+
 />
 
 </Canvas>
