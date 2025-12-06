@@ -306,30 +306,34 @@ export const App = observer(() => {
           gap={5}
         >
           {vm.mode === Mode.Play && (
-            <FlexRow
-              gap={5}
-              css={{
-                pointerEvents: 'all',
-              }}
-            >
-              <Button
-                minimal
-                onClick={vm.solve}
-                icon={IconNames.PredictiveAnalysis}
-                disabled={!vm.isSolvable}
-                intent={vm.isSolvable ? undefined : Intent.WARNING}
-                title={vm.isSolvable ? undefined : 'This cube is not solvable'}
-              >
-                Solve
-              </Button>
-              <Button minimal onClick={vm.edit} icon={IconNames.Edit}>
-                Edit
-              </Button>
-              <Button minimal onClick={vm.explodeShuffle} icon={IconNames.Random}>
-                Shuffle
-              </Button>
-            </FlexRow>
-          )}
+  <FlexRow
+    gap={10}
+    css={{
+      pointerEvents: 'all',
+    }}
+  >
+    {/* 처음 상태로 리셋 */}
+    <Button
+      large
+      intent={Intent.PRIMARY}
+      icon={IconNames.Reset}
+      onClick={vm.reset}
+    >
+      처음 상태
+    </Button>
+
+    {/* 랜덤 섞기(셔플) */}
+    <Button
+      large
+      intent={Intent.SUCCESS}
+      icon={IconNames.Random}
+      onClick={vm.explodeShuffle}
+    >
+      섞기
+    </Button>
+  </FlexRow>
+)}
+
           {vm.mode === Mode.Edit && (
             <>
               <FlexRow
