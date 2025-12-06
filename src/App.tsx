@@ -40,12 +40,15 @@ export enum ExplodingState {
 type CornerIndex = 0 | 1 | 2 | 3;
 
 // 각 코너별로 "push(밀기)가 clockwise(true)인지 counterclockwise(false)인지"
+type CornerIndex = 0 | 1 | 2 | 3;
+
 const PUSH_DIR: Record<CornerIndex, boolean> = {
-  0: true,   // corner 0에서 push=clockwise
-  1: true,   // corner 1에서 push=clockwise
-  2: true,   // corner 2에서 push=clockwise
-  3: true,   // corner 3에서 push=clockwise
+  0: true,
+  1: false, // 🔹 왼쪽 위 코너: push(우클릭)는 counterclockwise 쪽이 바깥
+  2: true,
+  3: true,  // 🔹 오른쪽 위 코너: push(우클릭)는 clockwise 쪽이 바깥
 };
+
 
 export class AppViewModel extends BaseViewModel {
   state = State.solved();
